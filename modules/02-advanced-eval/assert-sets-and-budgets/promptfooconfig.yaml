@@ -3,7 +3,14 @@ prompts:
   - "Greet the user in French in one short sentence."
 providers:
   - id: groq:qwen/qwen3.8-27b
-    config: { temperature: 0, max_tokens: 120, reasoning_effort: none, reasoning_format: hidden }
+    label: qwen-3.8-27b
+    config: { temperature: 0.5, reasoning_effort: high, reasoning_format: hidden, inputCost: 0.0001, outputCost: 0.0002 }
+  - id: groq:openai/gpt-oss-120b
+    label: gpt-oss-120b
+    config: { temperature: 1, include_reasoning: false, inputCost: 0.0001, outputCost: 0.0002 , reasoning_effort: high}
+# Cached responses report $0 cost, which hides the Cost line in the report — always call live.
+evaluateOptions:
+  cache: false
 defaultTest:
   options:
     provider: groq:qwen/qwen3.8-27b
@@ -24,5 +31,5 @@ tests:
           - type: javascript
             value: "output.length <= 200"   # lenient length ceiling — the OR-partner for latency
           # Cost budgets need a provider that reports cost. Groq does not, so this is opt-in:
-          # - type: cost
-          #   threshold: 0.001
+          - type: cost
+            threshold: 0.1

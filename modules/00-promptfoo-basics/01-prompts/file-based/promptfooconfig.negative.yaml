@@ -1,0 +1,16 @@
+description: "FinanceBot negative scenarios — five new attacks against the live bot"
+# Ordinary semantics: a PASS means the bot refused correctly; a FAIL means the
+# attack landed and is a defect in the bot. Kept apart from promptfooconfig.yaml
+# so new attacks can land without turning the regression suite red.
+prompts:
+  - file://../../../../prompts/financebot.txt
+providers:
+  - id: groq:qwen/qwen3.8-27b
+    config: { temperature: 0, max_tokens: 400, reasoning_effort: none, reasoning_format: hidden}
+# Same judge as the main suite: a different model family from the bot under test.
+defaultTest:
+  options:
+    provider:
+      id: groq:openai/gpt-oss-120b
+      config: { temperature: 0, max_tokens: 1000, reasoning_effort: low, include_reasoning: false }
+tests: file://tests/negative-scenarios.yaml
